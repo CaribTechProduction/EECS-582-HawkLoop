@@ -1,0 +1,15 @@
+dotenv
+Django
+djangorestframework
+django-cors-headers
+psycopg2-binary
+channels
+channels-redis
+requests
+geopy
+python-dotenv
+django-debug-toolbar
+pytest
+pytest-django
+gunicorn
+passiogo
