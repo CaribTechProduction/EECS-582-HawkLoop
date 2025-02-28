@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from djangorestframework import viewsets
+from .models import Route, Stop, Vehicle, Alert
+from .serializer import RouteSerializer, StopSerializer, VehicleSerializer, AlertSerializer
 
-# Create your views here.
+class RouteViewSet(viewsets.ModelViewSet):
+    queryset = Route.objects.all()
+    serializer_class = RouteSerializer
+
+# Similarly, create viewsets for Stop, Vehicle, and Alert
+

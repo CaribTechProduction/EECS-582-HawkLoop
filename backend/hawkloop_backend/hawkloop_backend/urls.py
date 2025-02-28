@@ -15,8 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from djangorestframework.routers import DefaultRouter
+from bus_tracking_app.views import RouteViewSet, StopViewSet, VehicleViewSet, AlertViewSet
+
+# Initialize the router for API endpoints
+router = DefaultRouter()
+router.register(r'routes', RouteViewSet)   # API endpoint for routes
+router.register(r'stops', StopViewSet)     # API endpoint for stops
+router.register(r'vehicles', VehicleViewSet)  # API endpoint for real-time vehicle tracking
+router.register(r'alerts', AlertViewSet)   # API endpoint for system alerts
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),  # Default admin route
+    path('api/', include(router.urls)),  # Include API endpoints
 ]
+
