@@ -16,15 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from djangorestframework.routers import DefaultRouter
-from bus_tracking_app.views import RouteViewSet, StopViewSet, VehicleViewSet, AlertViewSet
+from rest_framework.routers import DefaultRouter
+from hawkloop_app.views import RouteViewSet, StopViewSet, VehicleViewSet, AlertViewSet
 
 # Initialize the router for API endpoints
 router = DefaultRouter()
-router.register(r'routes', RouteViewSet)   # API endpoint for routes
-router.register(r'stops', StopViewSet)     # API endpoint for stops
-router.register(r'vehicles', VehicleViewSet)  # API endpoint for real-time vehicle tracking
-router.register(r'alerts', AlertViewSet)   # API endpoint for system alerts
+router.register(r'routes', RouteViewSet, basename='routes')   # API endpoint for routes
+router.register(r'stops', StopViewSet, basename='stops')     # API endpoint for stops
+router.register(r'vehicles', VehicleViewSet, basename='vehicles')  # API endpoint for real-time vehicle tracking
+router.register(r'alerts', AlertViewSet, basename='alerts')   # API endpoint for system alerts
 
 urlpatterns = [
     path('admin/', admin.site.urls),  # Default admin route

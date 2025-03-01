@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'hawkloop_app',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -68,7 +70,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'hawkloop_backend.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
