@@ -93,18 +93,18 @@ HawkLoop is a real-time bus tracking application designed to provide live bus lo
 ## Backend Setup
 
 1. Clone the repository.
+
    ```bash
    git clone https://github.com/CaribTechProduction/EECS-582-HawkLoop.git
    ```
 
-````
-
 2. Set up a virtual environment:
+
 ```bash
 python -m venv env  # or venv
 source env/bin/activate  # Mac/Linux
 env\Scripts\activate  # Windows
-````
+```
 
 3. Install dependencies:
 
@@ -116,15 +116,19 @@ pip install -r requirements.txt
 
 - Install PostgreSQL & PostGIS
 
-- Create a database and configure `bash settings.py `
+- Create a database and configure `settings.py `
 
 5. Apply migrations:
 
-`bash python manage.py migrate `
+```bash
+python manage.py migrate
+```
 
 6. Run the development server:
 
-`bash python manage.py runserver `
+```bash
+python manage.py runserver
+```
 
 ## Frontend Setup
 
@@ -132,11 +136,15 @@ pip install -r requirements.txt
 
 2. Install dependencies:
 
-`bash npm install `
+```bash
+npm install
+```
 
 3. Start the React Native development server:
 
-`bash npm start `
+```bash
+npm start
+```
 
 4. Test on an emulator or physical device using Expo.
 
