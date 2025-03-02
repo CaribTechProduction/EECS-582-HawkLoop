@@ -29,9 +29,18 @@ class VehicleViewSet(viewsets.ViewSet):
         system = passiogo.getSystemFromID(4834)
         vehicles = system.getVehicles()
 
-        # Format the data
+        # Format the data (without latitude)
         data = [
-            {"vehicle_id": v.id, "longitude": v.longitude, "latitude": v.latitude, "route_id": v.routeId}
+            {
+                "vehicle_id": v.id,
+                "longitude": v.longitude,
+                # Latitude is REMOVED because it does not exist in the API response
+                "calculatedCourse": v.calculatedCourse,  # Direction of travel
+                "route_id": v.routeId,
+                "trip_id": v.tripId,  # Including trip ID for more context
+                "speed": v.speed,  # Including speed if available
+                "outOfService": v.outOfService  # Is the vehicle active?
+            }
             for v in vehicles
         ]
 
