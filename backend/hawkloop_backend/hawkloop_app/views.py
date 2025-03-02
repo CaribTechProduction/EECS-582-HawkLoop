@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from rest_framework import viewsets
 from rest_framework.response import Response
 import passiogo
@@ -10,23 +11,37 @@ class RouteViewSet(viewsets.ViewSet):
         queryset = Route.objects.all()
         serializer_class = RouteSerializer
 
-# Similarly, create viewsets for Stop, Vehicle, and Alert
+
 class StopViewSet(viewsets.ModelViewSet):
     queryset = Stop.objects.all()
     serializer_class = StopSerializer
-    
+
+
 class VehicleViewSet(viewsets.ViewSet):
     def list(self, request):
-        system = passiogo.getSystemFromID(4834)
-        vehicles = system.getVehicles()  # Fetch live vehicle data
+        # Check if vehicle data is cached in Redis
+        cached_data = cache.get("bus_locations")
 
-        # Format the response
+        if cached_data:
+            return Response(cached_data)  # Return cached data if available
+
+        # If not cached, fetch live data from Passio GO
+        system = passiogo.getSystemFromID(4834)
+        vehicles = system.getVehicles()
+
+        # Format the data
         data = [
-            {"vehicle_id": v.id, "longitude": v.longitude, "Lat": v.calculatedCourse, "route_id": v.routeId}
+            {"vehicle_id": v.id, "longitude": v.longitude, "latitude": v.latitude, "route_id": v.routeId}
             for v in vehicles
         ]
+
+        # Store the data in Redis for 30 seconds
+        cache.set("bus_locations", data, timeout=30)
+
         return Response(data)
-    
+
+
 class AlertViewSet(viewsets.ModelViewSet):
     queryset = Alert.objects.all()
     serializer_class = AlertSerializer
+
