@@ -2,6 +2,9 @@ from django.core.cache import cache
 from rest_framework import viewsets
 from rest_framework.response import Response
 import passiogo
+from rest_framework.views import APIView
+from rest_framework import status
+from hawkloop_app.models import BusLocation
 from .models import Route, Stop, Vehicle, Alert
 from .serializers import RouteSerializer, StopSerializer, VehicleSerializer, AlertSerializer
 
@@ -54,3 +57,7 @@ class AlertViewSet(viewsets.ModelViewSet):
     queryset = Alert.objects.all()
     serializer_class = AlertSerializer
 
+class LiveBusLocationView(APIView):
+    def get(self, request):
+        bus_data = BusLocation.objects.values("bus_id", "route_id", "latitude", "longitude", "timestamp")
+        return Response({"buses": list(bus_data)}, status=status.HTTP_200_OK)

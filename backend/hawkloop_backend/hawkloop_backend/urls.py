@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from hawkloop_app.views import RouteViewSet, StopViewSet, VehicleViewSet, AlertViewSet
+from hawkloop_app.views import RouteViewSet, StopViewSet, VehicleViewSet, AlertViewSet, LiveBusLocationView
 
 # Initialize the router for API endpoints
 router = DefaultRouter()
@@ -29,5 +29,6 @@ router.register(r'alerts', AlertViewSet, basename='alerts')   # API endpoint for
 urlpatterns = [
     path('admin/', admin.site.urls),  # Default admin route
     path('api/', include(router.urls)),  # Include API endpoints
+    path("api/live-buses/", LiveBusLocationView.as_view(), name="live-buses"),
 ]
 
