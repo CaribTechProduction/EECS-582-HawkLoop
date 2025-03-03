@@ -92,13 +92,13 @@ HawkLoop is a real-time bus tracking application designed to provide live bus lo
 
 ## Backend Setup
 
-# **🚀 Installation & Setup Guide**
+# Installation & Setup Guide\*\*
 
 This section provides step-by-step instructions for setting up the **HawkLoop** project, including **PostgreSQL, PostGIS, Django, and React Native**.
 
 ---
 
-## **1️⃣ Prerequisites**
+## Prerequisites\*\*
 
 Before setting up the project, ensure you have the following installed:
 
