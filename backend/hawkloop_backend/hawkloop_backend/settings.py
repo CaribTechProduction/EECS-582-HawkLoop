@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+# Import the PostgreSQL database configuration
+from .database_config import DATABASES
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -85,9 +87,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'hawkloop',
-        'USER': 'postgres',
-        'PASSWORD': 'Hawkloop',  # Use the password you set in step 3
-        'HOST': '127.0.0.1',
+        'USER': 'your_postgres_user',
+        'PASSWORD': 'your_password',
+        'HOST': 'localhost',  # Change if using a remote database
         'PORT': '5432',
     }
 }
