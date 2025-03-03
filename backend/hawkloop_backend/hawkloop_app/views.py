@@ -1,18 +1,24 @@
 from django.core.cache import cache
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
-import passiogo
 from rest_framework.views import APIView
-from rest_framework import status
+import passiogo
 from hawkloop_app.models import BusLocation
 from .models import Route, Stop, Vehicle, Alert
 from .serializers import RouteSerializer, StopSerializer, VehicleSerializer, AlertSerializer
+from runtime_estimation import estimate_runtime  # Import the runtime estimation function
 
 
 class RouteViewSet(viewsets.ViewSet):
     def list(self, request):
-        queryset = Route.objects.all()
-        serializer_class = RouteSerializer
+        def fetch_routes():
+            queryset = Route.objects.all()
+            serializer = RouteSerializer(queryset, many=True)
+            return serializer.data
+
+        # Estimate runtime for fetching routes
+        result = estimate_runtime(fetch_routes)
+        return Response(result)
 
 
 class StopViewSet(viewsets.ModelViewSet):
@@ -22,42 +28,50 @@ class StopViewSet(viewsets.ModelViewSet):
 
 class VehicleViewSet(viewsets.ViewSet):
     def list(self, request):
-        # Check if vehicle data is cached in Redis
-        cached_data = cache.get("bus_locations")
+        def fetch_vehicle_data():
+            # Check if vehicle data is cached in Redis
+            cached_data = cache.get("bus_locations")
 
-        if cached_data:
-            return Response(cached_data)  # Return cached data if available
+            if cached_data:
+                return cached_data  # Return cached data if available
 
-        # If not cached, fetch live data from Passio GO
-        system = passiogo.getSystemFromID(4834)
-        vehicles = system.getVehicles()
+            # If not cached, fetch live data from Passio GO
+            system = passiogo.getSystemFromID(4834)
+            vehicles = system.getVehicles()
 
-        # Format the data (without latitude)
-        data = [
-            {
-                "vehicle_id": v.id,
-                "longitude": v.longitude,
-                # Latitude is REMOVED because it does not exist in the API response
-                "calculatedCourse": v.calculatedCourse,  # Direction of travel
-                "route_id": v.routeId,
-                "trip_id": v.tripId,  # Including trip ID for more context
-                "speed": v.speed,  # Including speed if available
-                "outOfService": v.outOfService  # Is the vehicle active?
-            }
-            for v in vehicles
-        ]
+            # Format the data (without latitude)
+            data = [
+                {
+                    "vehicle_id": v.id,
+                    "longitude": v.longitude,
+                    "calculatedCourse": v.calculatedCourse,
+                    "route_id": v.routeId,
+                    "trip_id": v.tripId,
+                    "speed": v.speed,
+                    "outOfService": v.outOfService,
+                }
+                for v in vehicles
+            ]
 
-        # Store the data in Redis for 30 seconds
-        cache.set("bus_locations", data, timeout=30)
+            # Store the data in Redis for 30 seconds
+            cache.set("bus_locations", data, timeout=30)
+            return data
 
-        return Response(data)
+        # Estimate runtime for fetching vehicle data
+        result = estimate_runtime(fetch_vehicle_data)
+        return Response(result)
 
 
 class AlertViewSet(viewsets.ModelViewSet):
     queryset = Alert.objects.all()
     serializer_class = AlertSerializer
 
+
 class LiveBusLocationView(APIView):
     def get(self, request):
-        bus_data = BusLocation.objects.values("bus_id", "route_id", "latitude", "longitude", "timestamp")
-        return Response({"buses": list(bus_data)}, status=status.HTTP_200_OK)
+        def fetch_bus_locations():
+            return list(BusLocation.objects.values("bus_id", "route_id", "latitude", "longitude", "timestamp"))
+
+        # Estimate runtime for fetching live bus locations
+        result = estimate_runtime(fetch_bus_locations)
+        return Response({"buses": result}, status=status.HTTP_200_OK)
