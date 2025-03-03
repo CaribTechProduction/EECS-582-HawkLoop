@@ -1,0 +1,5 @@
+npx expo install react-native-maps
+npm install @gorhom/bottom-sheet react-native-gesture-handler
+npm install @react-navigation/native @react-navigation/native-stack @react-navigation/bottom-tabs
+npx expo install @expo/vector-icons
+npx expo install react-native-reanimated
