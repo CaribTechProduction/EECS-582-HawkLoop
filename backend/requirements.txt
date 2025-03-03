@@ -17,5 +17,4 @@ pytest
 pytest-django
 gunicorn
 passiogo
-python manage.py makemigrations
-python manage.py migrate
+
