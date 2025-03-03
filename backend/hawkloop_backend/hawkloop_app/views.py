@@ -1,13 +1,13 @@
 from django.core.cache import cache
 from rest_framework import viewsets
 from rest_framework.response import Response
+from django.http import HttpResponse
 import passiogo
 from rest_framework.views import APIView
 from rest_framework import status
 from hawkloop_app.models import BusLocation
 from .models import Route, Stop, Vehicle, Alert
 from .serializers import RouteSerializer, StopSerializer, VehicleSerializer, AlertSerializer
-
 
 class RouteViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -61,3 +61,16 @@ class LiveBusLocationView(APIView):
     def get(self, request):
         bus_data = BusLocation.objects.values("bus_id", "route_id", "latitude", "longitude", "timestamp")
         return Response({"buses": list(bus_data)}, status=status.HTTP_200_OK)
+
+
+def home(request):
+    return HttpResponse("<h1>Welcome to HawkLoop API</h1><p>Go to /api/ for API endpoints.</p>")
+
+class RouteViewSet(viewsets.ModelViewSet):
+    queryset = Route.objects.all()
+    serializer_class = RouteSerializer
+
+    def list(self, request, *args, **kwargs):
+        routes = self.get_queryset()
+        serializer = self.get_serializer(routes, many=True)
+        return Response(serializer.data)  # Ensure it returns a valid Response object

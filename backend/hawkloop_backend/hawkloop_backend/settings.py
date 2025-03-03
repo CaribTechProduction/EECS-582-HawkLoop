@@ -85,9 +85,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'hawkloop',
-        'USER': 'your_postgres_user',
-        'PASSWORD': 'your_password',
-        'HOST': 'localhost',  # Change if using a remote database
+        'USER': 'postgres',
+        'PASSWORD': 'Hawkloop',  # Use the password you set in step 3
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }

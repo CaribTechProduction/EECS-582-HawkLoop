@@ -1,3 +1,5 @@
+# The code snippet you provided is a URL configuration for a Django project named `hawkloop_backend`.
+# In Django, the `urlpatterns` list is used to route URLs to views within the project.
 """
 URL configuration for hawkloop_backend project.
 
@@ -21,14 +23,15 @@ from hawkloop_app.views import RouteViewSet, StopViewSet, VehicleViewSet, AlertV
 
 # Initialize the router for API endpoints
 router = DefaultRouter()
-router.register(r'routes', RouteViewSet, basename='routes')   # API endpoint for routes
-router.register(r'stops', StopViewSet, basename='stops')     # API endpoint for stops
-router.register(r'vehicles', VehicleViewSet, basename='vehicles')  # API endpoint for real-time vehicle tracking
-router.register(r'alerts', AlertViewSet, basename='alerts')   # API endpoint for system alerts
+router.register(r'routes', RouteViewSet, basename='routes')
+router.register(r'stops', StopViewSet, basename='stops')
+router.register(r'vehicles', VehicleViewSet, basename='vehicles')
+router.register(r'alerts', AlertViewSet, basename='alerts')
 
 urlpatterns = [
-    path('admin/', admin.site.urls),  # Default admin route
-    path('api/', include(router.urls)),  # Include API endpoints
-    path("api/live-buses/", LiveBusLocationView.as_view(), name="live-buses"),
+    path('admin/', admin.site.urls),  # Default Django admin panel
+    path('api/', include(router.urls)),  # API endpoints for routes, stops, vehicles, and alerts
+    path('api/', include('hawkloop_app.urls')),
+    path("api/live-buses/", LiveBusLocationView.as_view(), name="live-buses"),  # API for live bus tracking
 ]
 
