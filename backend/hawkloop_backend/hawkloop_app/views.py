@@ -1,12 +1,12 @@
 from django.core.cache import cache
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+import passiogo
 from rest_framework.views import APIView
 import passiogo
 from hawkloop_app.models import BusLocation
 from .models import Route, Stop, Vehicle, Alert
 from .serializers import RouteSerializer, StopSerializer, VehicleSerializer, AlertSerializer
-from runtime_estimation import estimate_runtime  # Import the runtime estimation function
 
 
 class RouteViewSet(viewsets.ViewSet):
@@ -69,9 +69,5 @@ class AlertViewSet(viewsets.ModelViewSet):
 
 class LiveBusLocationView(APIView):
     def get(self, request):
-        def fetch_bus_locations():
-            return list(BusLocation.objects.values("bus_id", "route_id", "latitude", "longitude", "timestamp"))
-
-        # Estimate runtime for fetching live bus locations
-        result = estimate_runtime(fetch_bus_locations)
-        return Response({"buses": result}, status=status.HTTP_200_OK)
+        bus_data = BusLocation.objects.values("bus_id", "route_id", "latitude", "longitude", "timestamp")
+        return Response({"buses": list(bus_data)}, status=status.HTTP_200_OK)

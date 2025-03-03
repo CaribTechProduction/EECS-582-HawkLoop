@@ -80,22 +80,16 @@ WSGI_APPLICATION = 'hawkloop_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-#DATABASES = {
-   # 'default': {
-      #  'ENGINE': 'django.db.backends.sqlite3',
-     #   'NAME': BASE_DIR / 'db.sqlite3',
-   # }
-#}
 
 DATABASES = {
-   'default': {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME', 'hawkloop_db'),
         'USER': os.getenv('DB_USER', 'hawkloop_user'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'eecs582hl'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),  
+        'HOST': os.getenv('DB_HOST', 'localhost'),  # Use IP if hosted remotely
         'PORT': os.getenv('DB_PORT', '5432'),
-  }
+    }
 }
 
 

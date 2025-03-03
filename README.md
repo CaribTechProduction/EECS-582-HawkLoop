@@ -92,6 +92,38 @@ HawkLoop is a real-time bus tracking application designed to provide live bus lo
 
 ## Backend Setup
 
+# Installation & Setup Guide\*\*
+
+This section provides step-by-step instructions for setting up the **HawkLoop** project, including **PostgreSQL, PostGIS, Django, and React Native**.
+
+---
+
+## Prerequisites\*\*
+
+Before setting up the project, ensure you have the following installed:
+
+- **Python 3.13** → [Download Python](https://www.python.org/downloads/)
+- **PostgreSQL 14+ with PostGIS**:
+
+  - **Mac (Homebrew)**:
+    ```sh
+    brew install postgresql postgis
+    brew services start postgresql
+    ```
+  - **Ubuntu/Linux**:
+    ```sh
+    sudo apt update
+    sudo apt install postgresql postgis
+    sudo systemctl start postgresql
+    ```
+  - **Windows**: [Download PostgreSQL](https://www.postgresql.org/download/) and enable **PostGIS** during installation.
+
+- **Redis** (for caching):
+  ```sh
+  brew install redis  # Mac
+  sudo apt install redis  # Linux
+  ```
+
 1. Clone the repository.
 
    ```bash
@@ -118,17 +150,73 @@ pip install -r requirements.txt
 
 - Create a database and configure `settings.py `
 
-5. Apply migrations:
+  - Open PostgreSQL:
 
-```bash
-python manage.py migrate
+  ```sh
+  psql -U postgres
+  ```
+
+  - Create a database:
+
+  ```sh
+  CREATE DATABASE hawkloop;
+  ```
+
+  - Enable PostGIS:
+
+  ```sh
+  \c hawkloop;
+  CREATE EXTENSION postgis;
+  ```
+
+  - Grant privileges:
+
+  ```sh
+  GRANT ALL PRIVILEGES ON DATABASE hawkloop TO postgres;
+  ```
+
+  - Exit:
+
+  ```sh
+  \q
+  ```
+
+5. Update Django Database Settings
+
+- Edit hawkloop_backend/settings.py:
+
+```sh
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'hawkloop',
+        'USER': 'postgres',
+        'PASSWORD': 'your_password',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
+}
 ```
 
-6. Run the development server:
+6. Apply migrations:
 
-```bash
+```sh
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py createsuperuser
+```
+
+7. Run the development server:
+
+```sh
 python manage.py runserver
 ```
+
+# Visit:
+
+- Admin Panel: http://127.0.0.1:8000/admin/
+- API Endpoint: http://127.0.0.1:8000/api/
+- Live Bus Tracking: http://127.0.0.1:8000/api/live-buses/
 
 ## Frontend Setup
 
