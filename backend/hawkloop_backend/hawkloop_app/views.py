@@ -4,7 +4,7 @@ from rest_framework.response import Response
 import passiogo
 from rest_framework.views import APIView
 import passiogo
-from hawkloop_app.models import BusLocation
+from .models import BusLocation
 from .models import Route, Stop, Vehicle, Alert
 from .serializers import RouteSerializer, StopSerializer, VehicleSerializer, AlertSerializer
 
@@ -17,8 +17,8 @@ class RouteViewSet(viewsets.ViewSet):
             return serializer.data
 
         # Estimate runtime for fetching routes
-        result = estimate_runtime(fetch_routes)
-        return Response(result)
+        #result = estimate_runtime(fetch_routes)
+        #return Response(result)
 
 
 class StopViewSet(viewsets.ModelViewSet):
@@ -58,8 +58,8 @@ class VehicleViewSet(viewsets.ViewSet):
             return data
 
         # Estimate runtime for fetching vehicle data
-        result = estimate_runtime(fetch_vehicle_data)
-        return Response(result)
+        # result = estimate_runtime(fetch_vehicle_data)
+        # return Response(result)
 
 
 class AlertViewSet(viewsets.ModelViewSet):

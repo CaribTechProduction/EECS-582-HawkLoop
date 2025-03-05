@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.gis.db import models
+# from django.contrib.gis.db import models
 
 class Route(models.Model):
     route_id = models.CharField(max_length=100, unique=True)
@@ -28,7 +28,7 @@ class BusLocation(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    location = models.PointField(geography=True, srid=4326)  # PostGIS Point Field
+    # location = models.PointField(geography=True, srid=4326)  # PostGIS Point Field
 
     def __str__(self):
         return f"Bus {self.bus_id} at {self.latitude}, {self.longitude}"
