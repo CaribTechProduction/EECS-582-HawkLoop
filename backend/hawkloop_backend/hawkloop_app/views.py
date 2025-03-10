@@ -11,7 +11,7 @@ from .serializers import RouteSerializer, StopSerializer, VehicleSerializer, Ale
 
 class RouteViewSet(viewsets.ViewSet):
     def list(self, request):
-        def fetch_routes():
+        # def fetch_routes():
             queryset = Route.objects.all()
             serializer = RouteSerializer(queryset, many=True)
             return serializer.data
@@ -28,21 +28,26 @@ class StopViewSet(viewsets.ModelViewSet):
 
 class VehicleViewSet(viewsets.ViewSet):
     def list(self, request):
-        def fetch_vehicle_data():
-            # Check if vehicle data is cached in Redis
-            cached_data = cache.get("bus_locations")
+        """
+        Fetch and return all active vehicle details from the PassioGo API.
+        Caches data for 30 seconds to reduce API calls.
+        """
+        # Check if vehicle data is cached in Redis
+        cached_data = cache.get("bus_locations")
 
-            if cached_data:
-                return cached_data  # Return cached data if available
+        if cached_data:
+            return Response(cached_data)
 
-            # If not cached, fetch live data from Passio GO
-            system = passiogo.getSystemFromID(4834)
+        # Fetch live vehicle data from PassioGo API
+        try:
+            system = passiogo.getSystemFromID(4834)  # Lawrence Bus System ID
             vehicles = system.getVehicles()
 
-            # Format the data (without latitude)
+            # Format data to return
             data = [
                 {
                     "vehicle_id": v.id,
+                    "latitude": v.latitude,  # Added latitude
                     "longitude": v.longitude,
                     "calculatedCourse": v.calculatedCourse,
                     "route_id": v.routeId,
@@ -53,13 +58,12 @@ class VehicleViewSet(viewsets.ViewSet):
                 for v in vehicles
             ]
 
-            # Store the data in Redis for 30 seconds
+            # Cache the data for 30 seconds
             cache.set("bus_locations", data, timeout=30)
-            return data
+            return Response(data)
 
-        # Estimate runtime for fetching vehicle data
-        # result = estimate_runtime(fetch_vehicle_data)
-        # return Response(result)
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
 
 
 class AlertViewSet(viewsets.ModelViewSet):

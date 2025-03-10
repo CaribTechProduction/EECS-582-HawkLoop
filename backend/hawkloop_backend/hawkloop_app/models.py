@@ -1,4 +1,5 @@
 from django.db import models
+import passiogo
 # from django.contrib.gis.db import models
 
 class Route(models.Model):
@@ -22,13 +23,13 @@ class Alert(models.Model):
     message = models.TextField()
     # Additional fields as needed
 
-class BusLocation(models.Model):
-    bus_id = models.CharField(max_length=50, unique=True)
-    route_id = models.CharField(max_length=50)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-    # location = models.PointField(geography=True, srid=4326)  # PostGIS Point Field
+# class BusLocation(models.Model):
+#     bus_id = models.CharField(max_length=50, unique=True)
+#     route_id = models.CharField(max_length=50)
+#     latitude = models.FloatField()
+#     longitude = models.FloatField()
+#     timestamp = models.DateTimeField(auto_now_add=True)
+#     # location = models.PointField(geography=True, srid=4326)  # PostGIS Point Field
 
-    def __str__(self):
-        return f"Bus {self.bus_id} at {self.latitude}, {self.longitude}"
+#     def __str__(self):
+#         return f"Bus {self.bus_id} at {self.latitude}, {self.longitude}"
