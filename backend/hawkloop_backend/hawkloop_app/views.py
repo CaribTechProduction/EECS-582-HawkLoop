@@ -12,19 +12,21 @@ from .serializers import RouteSerializer, StopSerializer, VehicleSerializer, Ale
 class RouteViewSet(viewsets.ViewSet):
     def list(self, request):
         # def fetch_routes():
-            queryset = Route.objects.all()
-            serializer = RouteSerializer(queryset, many=True)
-            return serializer.data
+            
+        queryset = Route.objects.all()
+        serializer = RouteSerializer(queryset, many=True)
+        return Response(serializer.data, status=200)  
 
         # Estimate runtime for fetching routes
         #result = estimate_runtime(fetch_routes)
         #return Response(result)
 
 
-class StopViewSet(viewsets.ModelViewSet):
+class StopViewSet(viewsets.ViewSet):
     queryset = Stop.objects.all()
     serializer_class = StopSerializer
-
+    # Fetch live vehicle data from PassioGo API
+        
 
 class VehicleViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -33,38 +35,32 @@ class VehicleViewSet(viewsets.ViewSet):
         Caches data for 30 seconds to reduce API calls.
         """
         # Check if vehicle data is cached in Redis
-        cached_data = cache.get("bus_locations")
+        # cached_data = cache.get("bus_locations")
 
-        if cached_data:
-            return Response(cached_data)
+        #if cached_data:
+            #return Response(cached_data)
 
         # Fetch live vehicle data from PassioGo API
-        try:
-            system = passiogo.getSystemFromID(4834)  # Lawrence Bus System ID
-            vehicles = system.getVehicles()
+        system = passiogo.getSystemFromID(4834)  
+        vehicles = system.getVehicles()
 
-            # Format data to return
-            data = [
-                {
-                    "vehicle_id": v.id,
-                    "latitude": v.latitude,  # Added latitude
-                    "longitude": v.longitude,
-                    "calculatedCourse": v.calculatedCourse,
-                    "route_id": v.routeId,
-                    "trip_id": v.tripId,
-                    "speed": v.speed,
-                    "outOfService": v.outOfService,
-                }
-                for v in vehicles
-            ]
+        # Format data to return
+        data = [
+            {
+                "vehicle_id": v.id,
+                "longitude": v.longitude,
+                "calculatedCourse": v.calculatedCourse,
+                "route_id": v.routeId,
+                "trip_id": v.tripId,
+                "speed": v.speed,
+                "outOfService": v.outOfService,
+            }
+            for v in vehicles
+        ]
 
-            # Cache the data for 30 seconds
-            cache.set("bus_locations", data, timeout=30)
-            return Response(data)
-
-        except Exception as e:
-            return Response({"error": str(e)}, status=500)
-
+        # Cache the data for 30 seconds
+        # cache.set("bus_locations", data, timeout=30)
+        return Response(data)
 
 class AlertViewSet(viewsets.ModelViewSet):
     queryset = Alert.objects.all()

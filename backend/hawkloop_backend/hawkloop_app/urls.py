@@ -1,14 +1,10 @@
 from django.urls import path
-from rest_framework.routers import DefaultRouter
-from .views import RouteViewSet, StopViewSet, VehicleViewSet, AlertViewSet, LiveBusLocationView
+from .views import VehicleViewSet, RouteViewSet, StopViewSet, AlertViewSet
 
-# Initialize router
-router = DefaultRouter()
-router.register(r'routes', RouteViewSet, basename='routes')
-router.register(r'stops', StopViewSet, basename='stops')
-router.register(r'vehicles', VehicleViewSet, basename='vehicles')
-router.register(r'alerts', AlertViewSet, basename='alerts')
-
-urlpatterns = router.urls + [
-    path("live-buses/", LiveBusLocationView.as_view(), name="live-buses"),
+urlpatterns = [
+    path('routes/', RouteViewSet.as_view({'get': 'list'}), name='routes-list'),
+    path('stops/', StopViewSet.as_view({'get': 'list'}), name='stops-list'),
+    path('vehicles/', VehicleViewSet.as_view({'get': 'list'}), name='vehicles-list'),
+    path('alerts/', AlertViewSet.as_view({'get': 'list'}), name='alerts-list'),
 ]
+
