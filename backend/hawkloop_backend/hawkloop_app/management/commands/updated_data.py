@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-import passiogo
+import passiogo_up
 from hawkloop_app.models import Route, Stop, Vehicle, Alert
 
 class Command(BaseCommand):
@@ -8,7 +8,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         try:
             # Connect to the Passio GO system using SYSTEM_ID
-            system = passiogo.getSystemFromID(4834)
+            system = passiogo_up.getSystemFromID(4834)
 
             # Update Routes
             self.stdout.write("Fetching routes from Passio GO API...")

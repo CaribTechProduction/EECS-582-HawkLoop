@@ -1,6 +1,6 @@
 import os
 import psycopg2
-import passiogo
+import passiogo_up
 from dotenv import load_dotenv
 from django.core.management.base import BaseCommand
 
@@ -35,7 +35,7 @@ class Command(BaseCommand):
 
             # Initialize PassioGo System
             system_id = 4834  # Replace with the actual system ID for your university
-            system = passiogo.getSystemFromID(system_id)
+            system = passiogo_up.getSystemFromID(system_id)
 
             # Create required tables if they don’t exist
             cursor.execute("""

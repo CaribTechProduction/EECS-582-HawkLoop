@@ -1,5 +1,5 @@
 asgiref
-Django
+django
 django-redis
 redis
 sqlparse
@@ -16,5 +16,5 @@ django-debug-toolbar
 pytest
 pytest-django
 gunicorn
-passiogo
+passiogo_up
 
