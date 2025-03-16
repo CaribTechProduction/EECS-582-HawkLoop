@@ -1,5 +1,5 @@
 from django.db import models
-import passiogo_up
+import passiogo
 # from django.contrib.gis.db import models
 
 class Route(models.Model):

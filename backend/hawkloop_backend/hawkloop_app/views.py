@@ -1,9 +1,8 @@
 from django.core.cache import cache
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-import passiogo
 from rest_framework.views import APIView
-import passiogo_up
+import passiogo
 #from .models import BusLocation
 from .models import Route, Stop, Vehicle, Alert
 from .serializers import RouteSerializer, StopSerializer, VehicleSerializer, AlertSerializer
@@ -41,7 +40,7 @@ class VehicleViewSet(viewsets.ViewSet):
             #return Response(cached_data)
 
         # Fetch live vehicle data from PassioGo API
-        system = passiogo_up.getSystemFromID(4834)  
+        system = passiogo.getSystemFromID(4834)  
         vehicles = system.getVehicles()
 
         # Format data to return
