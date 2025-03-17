@@ -32,6 +32,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),  # Default Django admin panel
     path('api/', include(router.urls)),  # API endpoints for routes, stops, vehicles, and alerts
     path('api/', include('hawkloop_app.urls')),
-    # path("api/live-buses/", LiveBusLocationView.as_view(), name="live-buses"),  # API for live bus tracking
 ]
 

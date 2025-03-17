@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
+from django.core.cache import cache
 import passiogo
-from hawkloop_app.models import Route, Stop, Vehicle, Alert
+from hawkloop_app.models import *
 
 class Command(BaseCommand):
     help = "Update bus data from Passio GO API"
@@ -10,7 +11,7 @@ class Command(BaseCommand):
             # Connect to the Passio GO system using SYSTEM_ID
             system = passiogo.getSystemFromID(4834)
 
-            # Update Routes
+            #### UPDATE ROUTES #####
             self.stdout.write("Fetching routes from Passio GO API...")
             routes = system.getRoutes()
             for route in routes:
@@ -20,7 +21,7 @@ class Command(BaseCommand):
                 )
             self.stdout.write(self.style.SUCCESS(f"Successfully updated {len(routes)} routes."))
 
-            # Update Stops
+            ### UPDATE STOPS ####
             self.stdout.write("Fetching stops from Passio GO API...")
             stops = system.getStops()
             for stop in stops:
@@ -30,17 +31,37 @@ class Command(BaseCommand):
                 )
             self.stdout.write(self.style.SUCCESS(f"Successfully updated {len(stops)} stops."))
 
-            # Update Vehicles
+            ##### UPDATE VEHICLES #####
             self.stdout.write("Fetching vehicles from Passio GO API...")
             vehicles = system.getVehicles()
+            
+            vehicle_data = [] #Empy array to store the vehicle data.
             for vehicle in vehicles:
-                Vehicle.objects.update_or_create(
+                # Save location to the database (new entry for each update)
+                VehicleLocation.objects.create(
                     vehicle_id=vehicle.id,
-                    defaults={'route_id': vehicle.routeID, 'latitude': vehicle.latitude, 'longitude': vehicle.longitude}
+                    latitude=vehicle.latitude,
+                    longitude=vehicle.longitude
                 )
-            self.stdout.write(self.style.SUCCESS(f"Successfully updated {len(vehicles)} vehicles."))
+                
+                # Format data for Redis caching
+                vehicle_data.append({
+                    "vehicle_id": vehicle.id,
+                    "longitude": vehicle.longitude,
+                    "latitude": vehicle.latitude,
+                    "route_id": vehicle.routeId,
+                    "trip_id": vehicle.tripId,
+                    "speed": vehicle.speed,
+                    "outOfService": vehicle.outOfService,
+                })
 
-            # Update Alerts
+            # Cache data in Redis for fast retrieval (30 seconds)
+            cache.set("bus_locations", vehicle_data, timeout=30)
+                
+                
+            self.stdout.write(self.style.SUCCESS(f"Successfully updated {len(vehicles)} vehicle Locations."))
+
+            #### UPDATE ALERTS #####
             self.stdout.write("Fetching alerts from Passio GO API...")
             alerts = system.getAlerts()
             for alert in alerts:

@@ -12,3 +12,8 @@ __pycache__/
 # Ignore IDE-specific files (optional)
 .vscode/
 .idea/
+
+# Ignore Django migrations
+*/migrations/
+*/migrations/*.py
+*/migrations/*.pyc
