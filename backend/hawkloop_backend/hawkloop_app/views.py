@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 import passiogo
 from .models import Route, Stop, Vehicle, Alert
 from .serializers import RouteSerializer, StopSerializer, VehicleSerializer, AlertSerializer
+from django.http import HttpResponse
 
 
 class RouteViewSet(viewsets.ViewSet):
