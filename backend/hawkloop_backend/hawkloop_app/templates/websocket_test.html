@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<!--This is a temprory file that I used for testing.-->
+<html>
+<head>
+    <title>WebSocket Vehicle Test</title>
+</head>
+<body>
+    <h2>WebSocket Vehicle Tracker</h2>
+    <pre id="output">Connecting...</pre>
+
+    <script>
+        const output = document.getElementById("output");
+        const socket = new WebSocket("ws://localhost:8000/ws/vehicles/");
+
+        socket.onopen = function () {
+            output.textContent = "Connected to WebSocket server.";
+        };
+
+        socket.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            output.textContent = JSON.stringify(data, null, 2);
+        };
+
+        socket.onerror = function (error) {
+            output.textContent = "WebSocket Error: " + error;
+        };
+
+        socket.onclose = function () {
+            output.textContent = "WebSocket connection closed.";
+        };
+    </script>
+</body>
+</html>

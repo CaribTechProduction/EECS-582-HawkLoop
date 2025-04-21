@@ -3,6 +3,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import passiogo
+from django.shortcuts import render
 from .models import Route, Stop, Vehicle, Alert
 from .serializers import RouteSerializer, StopSerializer, VehicleSerializer, AlertSerializer
 
@@ -85,3 +86,9 @@ class VehicleViewSet(viewsets.ViewSet):
 class AlertViewSet(viewsets.ModelViewSet):
     queryset = Alert.objects.all()
     serializer_class = AlertSerializer
+    
+# WebSocket Test View
+"""Currently its rendering request from the test html file, it has to be later changed to the 
+actual frontend files."""
+def websocket_test_view(request):
+    return render(request, 'websocket_test.html')

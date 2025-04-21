@@ -19,7 +19,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from hawkloop_app.views import RouteViewSet, StopViewSet, VehicleViewSet, AlertViewSet
+from hawkloop_app.views import RouteViewSet, StopViewSet, VehicleViewSet, AlertViewSet, websocket_test_view
 
 # Initialize the router for API endpoints
 router = DefaultRouter()

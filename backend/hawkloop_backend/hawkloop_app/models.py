@@ -10,11 +10,13 @@ class Route(models.Model):
     
 
 class Stop(models.Model):
-    stop_id = models.CharField(max_length=100, unique=True)  # Should match PassioGo's stop_id
+    stop_id = models.CharField(max_length=100, unique=True, primary_key=True, db_column='stop_id')  # Should match PassioGo's stop_id
     name = models.CharField(max_length=255)
     latitude = models.FloatField()  # Ensure location data is stored
     longitude = models.FloatField()
 
+    class Meta:
+        db_table = 'stops'  # Tell Django to use the existing "stops" table
     def __str__(self):
         return f"Stop {self.stop_id}: {self.name}, Stop Location {self.latitude}, {self.longitude}"
 

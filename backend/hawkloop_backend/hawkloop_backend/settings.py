@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'hawkloop_app',
     'rest_framework',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -74,6 +75,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'hawkloop_backend.wsgi.application'
+
+ASGI_APPLICATION = 'hawkloop_backend.asgi.application'
+
+#Added channel for the websockets.
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6380)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -135,7 +148,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',  # Redis database 1
+        'LOCATION': 'redis://127.0.0.1:6380/1',  # Redis database 1
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }

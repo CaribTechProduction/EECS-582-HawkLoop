@@ -2,6 +2,8 @@ from django.core.management.base import BaseCommand
 from django.core.cache import cache
 import passiogo
 from hawkloop_app.models import *
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 class Command(BaseCommand):
     help = "Update bus data from Passio GO API"
@@ -38,11 +40,11 @@ class Command(BaseCommand):
             vehicle_data = [] #Empy array to store the vehicle data.
             for vehicle in vehicles:
                 # Save location to the database (new entry for each update)
-                VehicleLocation.objects.create(
-                    vehicle_id=vehicle.id,
-                    latitude=vehicle.latitude,
-                    longitude=vehicle.longitude
-                )
+                # VehicleLocation.objects.create(
+                #     vehicle_id=vehicle.id,
+                #     latitude=vehicle.latitude,
+                #     longitude=vehicle.longitude
+                # )
                 
                 # Format data for Redis caching
                 vehicle_data.append({
@@ -57,19 +59,27 @@ class Command(BaseCommand):
 
             # Cache data in Redis for fast retrieval (30 seconds)
             cache.set("bus_locations", vehicle_data, timeout=30)
-                
+              
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "vehicles",
+                {
+                    "type": "vehicle.update",
+                    "data": vehicle_data,
+                }
+            )  
                 
             self.stdout.write(self.style.SUCCESS(f"Successfully updated {len(vehicles)} vehicle Locations."))
 
             #### UPDATE ALERTS #####
-            self.stdout.write("Fetching alerts from Passio GO API...")
-            alerts = system.getAlerts()
-            for alert in alerts:
-                Alert.objects.update_or_create(
-                    alert_id=alert.id,
-                    defaults={'message': alert.message, 'start_time': alert.startTime, 'end_time': alert.endTime}
-                )
-            self.stdout.write(self.style.SUCCESS(f"Successfully updated {len(alerts)} alerts."))
+            # self.stdout.write("Fetching alerts from Passio GO API...")
+            # alerts = system.getAlerts()
+            # for alert in alerts:
+            #     Alert.objects.update_or_create(
+            #         alert_id=alert.id,
+            #         defaults={'message': alert.message, 'start_time': alert.startTime, 'end_time': alert.endTime}
+            #     )
+            # self.stdout.write(self.style.SUCCESS(f"Successfully updated {len(alerts)} alerts."))
 
         except Exception as e:
             self.stderr.write(self.style.ERROR(f"Error updating data: {e}"))
