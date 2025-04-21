@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'hawkloop_app',
     'rest_framework',
     'channels',
+    'favorites',
 ]
 
 MIDDLEWARE = [

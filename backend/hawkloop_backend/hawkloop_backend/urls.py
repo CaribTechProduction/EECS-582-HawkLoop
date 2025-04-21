@@ -31,6 +31,8 @@ router.register(r'alerts', AlertViewSet, basename='alerts')
 urlpatterns = [
     path('admin/', admin.site.urls),  # Default Django admin panel
     path('api/', include(router.urls)),  # API endpoints for routes, stops, vehicles, and alerts
-    path('api/', include('hawkloop_app.urls')),
+    path('api/', include('hawkloop_app.urls')), #for the websockets
+    path('api/', include('favorites.urls')),# For the favorites tab
+
 ]
 
