@@ -17,4 +17,5 @@ pytest
 pytest-django
 gunicorn
 passiogo_up
+uvicorn
 
