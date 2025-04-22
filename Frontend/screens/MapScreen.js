@@ -1,5 +1,6 @@
+// screens/MapScreen.js - Map view with live bus tracking
 import React, { useContext, useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import MapView, { Marker, Polyline, Callout } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { BusDataContext } from '../context/BusDataContext';
@@ -83,6 +84,22 @@ const MapScreen = () => {
       }
     }
   }, [selectedRoute, stops]);
+
+  // Center on selected building when it changes
+  useEffect(() => {
+    if (selectedBuilding && selectedBuilding.nearbyStops.length > 0 && stops) {
+      const relevantStop = stops.find(s => s.stop_id === selectedBuilding.nearbyStops[0]);
+      
+      if (relevantStop) {
+        setRegion({
+          latitude: relevantStop.latitude,
+          longitude: relevantStop.longitude,
+          latitudeDelta: 0.0122,
+          longitudeDelta: 0.0061, // Zoom in a bit more for building view
+        });
+      }
+    }
+  }, [selectedBuilding, stops]);
   
   return (
     <View style={styles.container}>
@@ -178,6 +195,27 @@ const MapScreen = () => {
           <Text style={styles.destinationText}>
             Destination: {selectedBuilding?.name || 'Not selected'}
           </Text>
+          
+          {/* Added: Nearby stops for the selected building */}
+          {selectedBuilding && selectedBuilding.nearbyStops.length > 0 && (
+            <View style={styles.nearbyStopsContainer}>
+              <Text style={styles.nearbyStopsLabel}>Nearby Stops:</Text>
+              <ScrollView 
+                horizontal 
+                showsHorizontalScrollIndicator={false}
+                style={styles.stopsScrollView}
+              >
+                {selectedBuilding.nearbyStops.map(stopId => {
+                  const stop = stops.find(s => s.stop_id === stopId);
+                  return stop ? (
+                    <View key={stopId} style={styles.stopBadge}>
+                      <Text style={styles.stopBadgeText}>{stop.name}</Text>
+                    </View>
+                  ) : null;
+                })}
+              </ScrollView>
+            </View>
+          )}
         </View>
       )}
     </View>
@@ -240,6 +278,30 @@ const styles = StyleSheet.create({
   },
   destinationText: {
     fontSize: 14,
+    color: '#333',
+    marginBottom: 8,
+  },
+  nearbyStopsContainer: {
+    marginTop: 8,
+  },
+  nearbyStopsLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#555',
+    marginBottom: 4,
+  },
+  stopsScrollView: {
+    flexDirection: 'row',
+  },
+  stopBadge: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginRight: 8,
+  },
+  stopBadgeText: {
+    fontSize: 12,
     color: '#333',
   },
 });

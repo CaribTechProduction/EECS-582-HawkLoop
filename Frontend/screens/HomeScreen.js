@@ -1,3 +1,4 @@
+// screens/HomeScreen.js - Main app screen
 import React, { useContext, useState, useEffect } from 'react';
 import { 
   StyleSheet, 
@@ -86,7 +87,7 @@ const HomeScreen = () => {
         <Text style={styles.title}>HawkLoop</Text>
       </View>
       
-      <Text style={styles.subtitle}>Where do you want to go?</Text>
+      <Text style={styles.subtitle}>Find your destination on campus</Text>
       
       <Searchbar
         placeholder="Search for a building..."
