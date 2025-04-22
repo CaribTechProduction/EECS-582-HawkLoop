@@ -1,28 +1,52 @@
 {
   "expo": {
-    "name": "HWLP3",
-    "slug": "HWLP3",
+    "name": "HawkLoop",
+    "slug": "hawkloop",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0051ba"
     },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ku.hawkloop",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "HawkLoop uses your location to show nearby bus stops and calculate ETAs."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#0051ba"
+      },
+      "package": "com.ku.hawkloop",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow HawkLoop to use your location to find nearby bus stops and calculate accurate arrival times."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "hawkloop-ku"
+      }
     }
   }
 }

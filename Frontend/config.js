@@ -1,4 +1,8 @@
+// config.js - Configuration settings
 const DEV_MODE = true;
+
+// Use mock data instead of real backend
+export const USE_MOCK_DATA = true;
 
 export const API_URL = DEV_MODE 
   ? 'http://localhost:8000' 
