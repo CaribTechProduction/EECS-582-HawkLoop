@@ -1,1 +1,0 @@
-- npm install react-native-maps @gorhom/bottom-sheet react-native-reanimated react-native-gesture-handler
