@@ -1,13 +1,22 @@
+// components/BuildingItem.js - Individual building item in the list
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const BuildingItem = ({ building, onPress }) => {
   return (
     <TouchableOpacity style={styles.itemContainer} onPress={() => onPress(building)}>
-      <View style={styles.iconContainer}>
-        <MaterialIcons name="location-on" size={24} color="#e8000d" />
-      </View>
+      {building.image ? (
+        <Image 
+          source={building.image} 
+          style={styles.buildingImage}
+          resizeMode="cover"
+        />
+      ) : (
+        <View style={styles.iconContainer}>
+          <MaterialIcons name="location-on" size={24} color="#e8000d" />
+        </View>
+      )}
       <View style={styles.textContainer}>
         <Text style={styles.buildingName}>{building.name}</Text>
         <Text style={styles.stopCount}>
@@ -35,7 +44,19 @@ const styles = StyleSheet.create({
     shadowRadius: 1.41,
   },
   iconContainer: {
-    marginRight: 16,
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  buildingImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    marginRight: 12,
   },
   textContainer: {
     flex: 1,
