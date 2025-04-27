@@ -1,0 +1,19 @@
+The integration points for our frontend and backend are in the following files:
+
+- config.js - Contains the API URLs and WebSocket URL
+- BusDataContext.js - Makes the actual API calls and WebSocket connection
+
+The main API endpoints our frontend expects are:
+
+/api/routes/ - For bus routes data
+/api/stops/ - For bus stop locations
+/api/vehicles/ - For initial vehicle data (though we'll mostly use WebSockets for this)
+WebSocket connection at ws://[server]/ws/vehicles/ for real-time vehicle updates
+
+Our frontend expects JSON responses with specific fields:
+
+- Routes need: route_id and name
+- Stops need: stop_id, name, latitude, and longitude
+- Vehicles need: vehicle_id, latitude, longitude, route_id, speed, etc.
+
+The real backend integration happens in BusDataContext.js where we make the fetch calls. 
