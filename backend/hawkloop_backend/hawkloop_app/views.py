@@ -6,6 +6,27 @@ import passiogo
 from django.shortcuts import render
 from .models import Route, Stop, Vehicle, Alert
 from .serializers import RouteSerializer, StopSerializer, VehicleSerializer, AlertSerializer
+from django.http import JsonResponse
+
+def search(request):
+    query = request.GET.get('query', '')
+    search_type = request.GET.get('type', '')
+
+    if not query or not search_type:
+        return JsonResponse({"error": "Missing 'query' or 'type' parameter."}, status=400)
+
+    results = []
+
+    if search_type == 'stop':
+        stops = Stop.objects.filter(name__icontains=query)
+        results = [{"id": stop.stop_id, "name": stop.name} for stop in stops]
+    elif search_type == 'route':
+        routes = Route.objects.filter(name__icontains=query)
+        results = [{"id": route.route_id, "name": route.name} for route in routes]
+    else:
+        return JsonResponse({"error": "Invalid search type. Must be 'stop' or 'route'."}, status=400)
+
+    return JsonResponse(results, safe=False)
 
 
 class RouteViewSet(viewsets.ViewSet):
