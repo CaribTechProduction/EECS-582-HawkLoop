@@ -90,5 +90,5 @@ class AlertViewSet(viewsets.ModelViewSet):
 # WebSocket Test View
 """Currently its rendering request from the test html file, it has to be later changed to the 
 actual frontend files."""
-def websocket_test_view(request):
-    return render(request, 'websocket_test.html')
+# def websocket_test_view(request):
+#     return render(request, 'websocket_test.html')
